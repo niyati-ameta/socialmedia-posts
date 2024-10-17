@@ -1,6 +1,7 @@
 package com.intuit.socialmedia.posts.service.impl;
 
 import com.intuit.socialmedia.posts.entity.Post;
+import com.intuit.socialmedia.posts.service.IRedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +13,7 @@ import java.util.*;
 
 @Service
 @Slf4j
-public class RedisService {
+public class RedisService implements IRedisService {
 
 
     @Value("${redis.maxList_size}")

@@ -11,6 +11,7 @@ import com.intuit.socialmedia.posts.mapper.PostMapper;
 import com.intuit.socialmedia.posts.model.RedisRecentPostObject;
 import com.intuit.socialmedia.posts.repository.PostDao;
 import com.intuit.socialmedia.posts.repository.UserFollowMappingDao;
+import com.intuit.socialmedia.posts.service.IRedisService;
 import com.intuit.socialmedia.posts.service.impl.RedisService;
 import com.intuit.socialmedia.posts.util.IDGenerationUtil;
 import com.intuit.socialmedia.posts.util.RedisKeyParser;
@@ -32,13 +33,13 @@ public class PostCreationService {
 
     private final PostDao postDao;
     private final PostMapper postMapper;
-    private final RedisService redisService;
+    private final IRedisService redisService;
     private final IDGenerationUtil idGenerationUtil;
     private final UserFollowMappingDao userFollowMappingDao;
     private final RedisKeyParser redisKeyParser;
 
     @Autowired
-    public PostCreationService(PostDao postDao, PostMapper postMapper, RedisService redisService, IDGenerationUtil idGenerationUtil, UserFollowMappingDao userFollowMappingDao, RedisKeyParser redisKeyParser) {
+    public PostCreationService(PostDao postDao, PostMapper postMapper, IRedisService redisService, IDGenerationUtil idGenerationUtil, UserFollowMappingDao userFollowMappingDao, RedisKeyParser redisKeyParser) {
         this.postDao = postDao;
         this.postMapper = postMapper;
         this.redisService = redisService;

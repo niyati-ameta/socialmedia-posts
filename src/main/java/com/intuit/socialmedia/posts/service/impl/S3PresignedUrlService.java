@@ -1,5 +1,6 @@
 package com.intuit.socialmedia.posts.service.impl;
 
+import com.intuit.socialmedia.posts.service.IS3PresignedUrlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.net.URL;
 import java.time.Duration;
 
 @Service
-public class S3PresignedUrlService {
+public class S3PresignedUrlService implements IS3PresignedUrlService {
 
     private final S3Presigner s3Presigner;
     @Value("${s3.socialPost.bucket}")

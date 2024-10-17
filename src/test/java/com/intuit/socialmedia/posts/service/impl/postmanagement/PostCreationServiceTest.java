@@ -10,6 +10,7 @@ import com.intuit.socialmedia.posts.exception.ResourceNotFoundException;
 import com.intuit.socialmedia.posts.mapper.PostMapper;
 import com.intuit.socialmedia.posts.repository.PostDao;
 import com.intuit.socialmedia.posts.repository.UserFollowMappingDao;
+import com.intuit.socialmedia.posts.service.IRedisService;
 import com.intuit.socialmedia.posts.service.impl.RedisService;
 import com.intuit.socialmedia.posts.util.IDGenerationUtil;
 import com.intuit.socialmedia.posts.util.RedisKeyParser;
@@ -41,7 +42,7 @@ public class PostCreationServiceTest {
     private PostMapper postMapper;
 
     @Mock
-    private RedisService redisService;
+    private IRedisService redisService;
 
     @Mock
     private IDGenerationUtil idGenerationUtil;

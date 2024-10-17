@@ -1,6 +1,7 @@
 package com.intuit.socialmedia.posts.controller;
 
 import com.intuit.socialmedia.posts.auth.CustomUserDetails;
+import com.intuit.socialmedia.posts.service.IS3PresignedUrlService;
 import com.intuit.socialmedia.posts.service.impl.S3PresignedUrlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +17,7 @@ import java.net.URL;
 public class S3Controller {
 
     @Autowired
-    private S3PresignedUrlService s3PresignedUrlService;
+    private IS3PresignedUrlService s3PresignedUrlService;
 
     @GetMapping("/upload/{key}")
     public String generateUploadPresignedUrl(@PathVariable String key) {

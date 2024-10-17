@@ -7,6 +7,7 @@ import com.intuit.socialmedia.posts.dto.response.CommentResponse;
 import com.intuit.socialmedia.posts.entity.Comment;
 import com.intuit.socialmedia.posts.repository.CommentDao;
 import com.intuit.socialmedia.posts.service.ICommentService;
+import com.intuit.socialmedia.posts.service.IRedisService;
 import com.intuit.socialmedia.posts.util.RedisKeyParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -19,11 +20,11 @@ import java.util.Map;
 @Service
 public class CommentService implements ICommentService {
     private final CommentDao commentDao;
-    private final RedisService redisService;
+    private final IRedisService redisService;
     private final RedisKeyParser redisKeyParser;
 
     @Autowired
-    public CommentService(CommentDao commentDao, RedisService redisService, RedisKeyParser redisKeyParser) {
+    public CommentService(CommentDao commentDao, IRedisService redisService, RedisKeyParser redisKeyParser) {
         this.commentDao = commentDao;
         this.redisService = redisService;
         this.redisKeyParser = redisKeyParser;

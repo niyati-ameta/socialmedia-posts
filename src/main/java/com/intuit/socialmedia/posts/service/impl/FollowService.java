@@ -8,6 +8,7 @@ import com.intuit.socialmedia.posts.model.RedisRecentPostObject;
 import com.intuit.socialmedia.posts.repository.UserDao;
 import com.intuit.socialmedia.posts.repository.UserFollowMappingDao;
 import com.intuit.socialmedia.posts.service.IFollowService;
+import com.intuit.socialmedia.posts.service.IRedisService;
 import com.intuit.socialmedia.posts.util.RedisKeyParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,12 @@ import java.util.Optional;
 public class FollowService implements IFollowService {
 
     private final UserFollowMappingDao followMappingDao;
-    private final RedisService redisService;
+    private final IRedisService redisService;
     private final UserDao userDao;
     private final RedisKeyParser redisKeyParser;
 
     @Autowired
-    public FollowService(UserFollowMappingDao followMappingDao, RedisService redisService, UserDao userDao, RedisKeyParser redisKeyParser) {
+    public FollowService(UserFollowMappingDao followMappingDao, IRedisService redisService, UserDao userDao, RedisKeyParser redisKeyParser) {
         this.followMappingDao = followMappingDao;
         this.redisService = redisService;
         this.userDao = userDao;
