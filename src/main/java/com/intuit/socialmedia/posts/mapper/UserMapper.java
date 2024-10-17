@@ -11,7 +11,6 @@ import java.util.Map;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     UserAuthResponse userMapToUserAuthResponse(Map<String, String> userMap);
     User requestToUserEntity(RegisterNewUserRequest request);

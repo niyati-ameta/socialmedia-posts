@@ -3,8 +3,6 @@ package com.intuit.socialmedia.posts.auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,7 +20,6 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 class SecurityConfiguration {
 
 
-    private final UserDetailsAuthenticator userDetailsAuthenticator;
     private final AuthJwtExceptionHandler authJwtExceptionHandler;
     private final JwtRequestFilter jwtRequestFilter;
 
@@ -35,10 +32,8 @@ class SecurityConfiguration {
     };
 
     @Autowired
-    public SecurityConfiguration(UserDetailsAuthenticator userDetailsAuthenticator,
-                                 AuthJwtExceptionHandler authJwtExceptionHandler,
+    public SecurityConfiguration(AuthJwtExceptionHandler authJwtExceptionHandler,
                                  JwtRequestFilter jwtRequestFilter) {
-        this.userDetailsAuthenticator = userDetailsAuthenticator;
         this.authJwtExceptionHandler = authJwtExceptionHandler;
         this.jwtRequestFilter = jwtRequestFilter;
     }
@@ -48,13 +43,6 @@ class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsAuthenticator);
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
-    }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -66,9 +54,7 @@ class SecurityConfiguration {
                         .authenticated())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(authJwtExceptionHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class
-                );
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

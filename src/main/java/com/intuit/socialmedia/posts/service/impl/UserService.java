@@ -14,10 +14,7 @@ import com.intuit.socialmedia.posts.util.IDGenerationUtil;
 import com.intuit.socialmedia.posts.util.RedisKeyParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,7 +26,6 @@ import java.util.Optional;
 @Slf4j
 public class UserService implements IUserService {
     private final RedisService redisService;
-    private final AuthenticationProvider authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final UserDao userDao;
@@ -39,7 +35,6 @@ public class UserService implements IUserService {
 
     @Autowired
     public UserService(RedisService redisService,
-                       AuthenticationProvider authenticationManager,
                        PasswordEncoder passwordEncoder,
                        JwtUtil jwtUtil,
                        UserDao userDao,
@@ -47,7 +42,6 @@ public class UserService implements IUserService {
                        IDGenerationUtil idGenerationUtil,
                        RedisKeyParser redisKeyParser) {
         this.redisService = redisService;
-        this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
         this.userDao = userDao;
@@ -72,8 +66,11 @@ public class UserService implements IUserService {
 
     public UserAuthResponse login(UserLoginRequest userLoginDto) throws Exception {
         try {
-            Authentication authenticationObject = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLoginDto.getEmail(), userLoginDto.getPassword()));
-            if (!authenticationObject.isAuthenticated()) {
+            Optional<User> userOptional = userDao.findByEmail(userLoginDto.getEmail());
+            User user = userOptional.orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+            boolean authenticated =  passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword());
+
+            if (!authenticated) {
                 throw new BadCredentialsException("Authentication Issue");
             }
         } catch (BadCredentialsException bce) {
@@ -94,6 +91,7 @@ public class UserService implements IUserService {
         log.error("User not found with id: {}", userId);
         throw new ResourceNotFoundException("User not found with id: " + userId);
     }
+
     public UserResponse getUserByEmail(String userEmail) {
         Optional<User> userEntity = userDao.findByEmail(userEmail);
         if (userEntity.isPresent()) {
