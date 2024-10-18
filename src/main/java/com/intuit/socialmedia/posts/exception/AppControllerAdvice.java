@@ -54,9 +54,9 @@ public class AppControllerAdvice {
         return new ErrorMessage(HttpStatus.UNAUTHORIZED, ex.getMessage(), request.getDescription(false));
     }
 
-    @ExceptionHandler(value = { IllegalArgumentException.class })
+    @ExceptionHandler(value = { UserAlreadyExistsException.class })
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorMessage handleIllegalArgumentExceptionException(Exception ex, WebRequest request) {
+    public ErrorMessage handleUserExistsException(Exception ex, WebRequest request) {
         log.error(ex.getMessage());
         return new ErrorMessage(HttpStatus.CONFLICT, ex.getMessage(), request.getDescription(false));
     }
@@ -66,6 +66,12 @@ public class AppControllerAdvice {
     public ErrorMessage handleException(Exception ex, WebRequest request) {
         log.error("Error in handling request", ex);
         return new ErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request.getDescription(false));
+    }
+    @ExceptionHandler(value = { IllegalArgumentException.class })
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessage handleIllegalArgumentException(Exception ex, WebRequest request) {
+        log.error(ex.getMessage());
+        return new ErrorMessage(HttpStatus.BAD_REQUEST, ex.getMessage(), request.getDescription(false));
     }
 
 }

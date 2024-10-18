@@ -7,6 +7,7 @@ import com.intuit.socialmedia.posts.dto.response.UserAuthResponse;
 import com.intuit.socialmedia.posts.dto.response.UserResponse;
 import com.intuit.socialmedia.posts.entity.User;
 import com.intuit.socialmedia.posts.exception.ResourceNotFoundException;
+import com.intuit.socialmedia.posts.exception.UserAlreadyExistsException;
 import com.intuit.socialmedia.posts.mapper.UserMapper;
 import com.intuit.socialmedia.posts.repository.UserDao;
 import com.intuit.socialmedia.posts.service.IUserService;
@@ -53,7 +54,7 @@ public class UserService implements IUserService {
     public void registerUser(RegisterNewUserRequest newUserRequest) {
         userDao.findByEmail(newUserRequest.getEmail())
                 .ifPresent(existingUser -> {
-                    throw new IllegalArgumentException("User already registered!");
+                    throw new UserAlreadyExistsException("User already registered!");
                 });
 
         User userEntity = userMapper.requestToUserEntity(newUserRequest);

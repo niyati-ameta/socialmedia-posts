@@ -4,6 +4,7 @@ import com.intuit.socialmedia.posts.auth.CustomUserDetails;
 import com.intuit.socialmedia.posts.entity.UserFollowMapping;
 import com.intuit.socialmedia.posts.entity.UserFollowMappingId;
 import com.intuit.socialmedia.posts.exception.ResourceNotFoundException;
+import com.intuit.socialmedia.posts.exception.UserAlreadyExistsException;
 import com.intuit.socialmedia.posts.model.RedisRecentPostObject;
 import com.intuit.socialmedia.posts.repository.UserDao;
 import com.intuit.socialmedia.posts.repository.UserFollowMappingDao;
@@ -43,7 +44,7 @@ public class FollowService implements IFollowService {
 
         // Check if the user is already following the followee
         followMappingDao.findById(new UserFollowMappingId(userDetails.getId(), followUserId))
-                .ifPresent(value -> { throw new IllegalArgumentException("You are already following this user."); });
+                .ifPresent(value -> { throw new UserAlreadyExistsException("You are already following this user."); });
 
         //can be checked in redis first
         userDao.findById(followUserId).orElseThrow(() ->  new ResourceNotFoundException("followee userId doesn't exist"));
