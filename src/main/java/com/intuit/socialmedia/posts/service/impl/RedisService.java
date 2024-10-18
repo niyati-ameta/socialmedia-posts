@@ -27,20 +27,20 @@ public class RedisService implements IRedisService {
 
     // Method to get a value from Redis
     public Object getValue(String key) {
-        if(Objects.isNull(key))
+        if (Objects.isNull(key))
             return null;
         return redisTemplate.opsForValue().get(key);
     }
 
     // Method to set a value in Redis
     public void setValue(String key, Object value) {
-        if(Objects.isNull(key))
+        if (Objects.isNull(key))
             return;
         redisTemplate.opsForValue().set(key, value);
     }
 
     public void addToListAndTrim(String listKey, Object newValue) {
-        if(Objects.isNull(listKey))
+        if (Objects.isNull(listKey))
             return;
         // Perform LPUSH operation to add new element at the head of the list
         redisTemplate.opsForList().leftPush(listKey, newValue);
@@ -50,33 +50,35 @@ public class RedisService implements IRedisService {
     }
 
     public List<Object> getList(String listKey) {
-         List<Object> response = redisTemplate.opsForList().range(listKey, 0, -1);
-         if(response == null)
-             return new LinkedList<>();
-         return response;
+        List<Object> response = redisTemplate.opsForList().range(listKey, 0, -1);
+        if (response == null)
+            return new LinkedList<>();
+        return response;
     }
 
     public Map<String, Object> multiGet(List<String> keys) {
         Map<String, Object> map = new LinkedHashMap<>();
-        if(Objects.isNull(keys) || keys.isEmpty())
+        if (Objects.isNull(keys) || keys.isEmpty())
             return map;
         List<Object> response = redisTemplate.opsForValue().multiGet(keys);
-        if(response == null)
+        if (response == null)
             return map;
-        for(int i= 0; i < response.size(); ++i)
+        for (int i = 0; i < response.size(); ++i)
             map.put(keys.get(i), response.get(i));
 
         return map;
     }
 
     public void multiSet(Map<String, Object> keyVals) {
-        if(keyVals.size() == 0)
+        if (keyVals.size() == 0)
             return;
         redisTemplate.opsForValue().multiSet(keyVals);
     }
 
     public void addList(String key, List<Object> value) { //rightPush cuz already recent_posts are sorted DESC
-        redisTemplate.opsForList().rightPushAll(key, value);
+        if (!value.isEmpty()) {
+            redisTemplate.opsForList().rightPushAll(key, value);
+        }
     }
 
     public void replaceList(String key, List<Object> value) {
